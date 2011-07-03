@@ -40,7 +40,7 @@ class PhoneNumberValidatorTest(unittest.TestCase):
                 default_country_code=u'370',
                 validation_exception_type=CustomValidationError,
                 convert=False)
-        #self.assertRaises(CustomValidationError, validator, 'foo')
+        self.assertRaises(CustomValidationError, validator, u'foo')
 
     def test_correct_numbers(self):
 
