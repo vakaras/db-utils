@@ -50,50 +50,53 @@ class IdentityCodeValidator(object):
         """
 
         try:
-            g, y1, y2, m1, m2, d1, d2, x1, x2, x3, k = [
-                int(i) for i in value]
+            digits = [int(i) for i in value]
         except ValueError:
             raise self.validation_exception_type(
-                    u'Identity code should have 11 digits.')
+                    u'Identity code should have only digits.')
+        if len(digits) != 11:
+            raise self.validation_exception_type(
+                    u'Identity code should have exactly 11 digits.')
+        gender_digit = digits[0]
+        control_digit = digits[-1]
 
-        sum1 = (g*1+y1*2+y2*3+m1*4+m2*5+d1*6+d2*7+x1*8+x2*9+x3*1)%11
-        sum2 = (g*3+y1*4+y2*5+m1*6+m2*7+d1*8+d2*9+x1*1+x2*2+x3*3)%11
-        sum3 = 0
+        case = None
+        for case, multipliers in enumerate([
+            range(1, 10) + [1], range(3, 10) + range(1, 4)]):
+            counted_control_digit = sum([
+                digit * multiplier
+                for digit, multiplier in zip(digits, multipliers)]) % 11
+            if counted_control_digit != 10:
+                case -= 1
+                break
+        case += 1
 
-        if sum1 != 10:
-            case = [sum1, 1]
-        elif sum2 != 10:
-            case = [sum2, 2]
-        else:
-            case = [sum3, 3]
-
-        if k != case[0]:
+        if control_digit != counted_control_digit:
             raise self.validation_exception_type((
                     u'Incorrect identity code. Control digit is {0} and '
                     u'by case {2} was counted {1}.').format(
-                        k, case[0], case[1]))
+                        control_digit, counted_control_digit, case+1))
 
-        if g in (1, 3, 5):
+        if gender_digit in (1, 3, 5):
             gender = u'm'
-        elif g in (2, 4, 6):
+        elif gender_digit in (2, 4, 6):
             gender = u'f'
         else:
             raise self.validation_exception_type(
-                    u'Unknown gender: {0}.'.format(g))
+                    u'Unknown gender: {0}.'.format(gender_digit))
 
-        if g in (1, 2):
+        if gender_digit in (1, 2):
             year = u'18'
-        elif g in (3, 4):
+        elif gender_digit in (3, 4):
             year = u'19'
         else:
             year = u'20'
         try:
             birth_date = datetime.date(
-                int(u'{0}{1}{2}'.format(year, y1, y2)),
-                int(u'{0}{1}'.format(m1, m2)),
-                int(u'{0}{1}'.format(d1, d2)))
+                int(u'{0}{1}{2}'.format(year, digits[1], digits[2])),
+                int(u'{0}{1}'.format(digits[3], digits[4])),
+                int(u'{0}{1}'.format(digits[5], digits[6])))
         except ValueError:
-            raise self.validation_exception_type(
-                    u'Wrong birth date.'.format(g))
+            raise self.validation_exception_type(u'Wrong birth date.')
 
         return IdentityCode(value, gender, birth_date)

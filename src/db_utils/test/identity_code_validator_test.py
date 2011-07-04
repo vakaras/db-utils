@@ -77,6 +77,7 @@ class IdentityCodeValidatorTest(unittest.TestCase):
 
         self.assertRaises(ValidationError, validator, u'foo')
         self.assertRaises(ValidationError, validator, u'1234567890')
+        self.assertRaises(ValidationError, validator, u'609020210084')
         self.assertRaises(ValidationError, validator, u'12345678901')
         self.assertRaises(ValidationError, validator, u'00902021004')
         self.assertRaises(ValidationError, validator, u'61102291005')
