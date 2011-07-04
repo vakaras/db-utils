@@ -25,6 +25,10 @@ class Address(dict):
 
 class LTAddressValidator(object):
     """ Validates if given string represents valid Lithuania address.
+
+    Recommendations for writing addresses can be found
+    `here <http://www.post.lt/lt/?id=1218>`_.
+
     """
 
     def __init__(self,
