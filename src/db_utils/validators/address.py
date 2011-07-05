@@ -17,6 +17,7 @@ class Address(dict):
     """
 
     def __init__(self, address):
+        super(Address, self).__init__()
         self.address = address
 
     def __unicode__(self):
