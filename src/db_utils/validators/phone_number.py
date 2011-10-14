@@ -2,6 +2,10 @@
 
 
 """ Validators of phone numbers.
+
+.. todo::
+    German phone number can be longer than 11 digits.
+
 """
 
 
@@ -9,6 +13,8 @@ from db_utils.validators.exceptions import ValidationError
 from db_utils.validators.phone_codes import COUNTRIES_PHONE_CODES_BY_CODE
 from db_utils.validators.phone_codes import COUNTRIES_PHONE_CODES
 from db_utils.decorators.unicode import UnicodeArguments
+
+from django.utils.translation import ugettext as _
 
 
 def simple_validator(value):
@@ -18,7 +24,7 @@ def simple_validator(value):
     try:
         return int(value)
     except ValueError:
-        raise ValidationError(u'Not a number: {0}'.format(value))
+        raise ValidationError(_(u'Not a number: {0}').format(value))
 
 
 class PhoneNumber(object):
@@ -77,7 +83,7 @@ class PhoneNumberValidator(object):
             value = value[1:]
         elif not self.convert:
             raise self.validation_exception_type(
-                    u'Phone number is not in international form.')
+                    _(u'Phone number is not in international form.'))
         if value.startswith(u'00'):
             already_international = True
             value = value[2:]
@@ -88,17 +94,17 @@ class PhoneNumberValidator(object):
             number.country_code = self.default_country['code']
             number.country = self.default_country['country']
         else:
-            raise self.validation_exception_type(
+            raise self.validation_exception_type(_(
                     u'Phone number have to be in international form or '
-                    u'start with 8.')
+                    u'start with 8.'))
 
         value = self.parse_region_code(value, number)
         number.number = value
 
         if len(unicode(number)) != 12:
-            raise self.validation_exception_type(
-                    u'Phone number in international form should have 12 '
-                    u'digits.')
+            raise self.validation_exception_type(_(
+                    u'Phone number in international form should have 11 '
+                    u'digits.'))
 
         return number
 
@@ -114,7 +120,7 @@ class PhoneNumberValidator(object):
                 number.country = country['country']
                 return value[len(country['code']):]
 
-        raise self.validation_exception_type(u'Unknown country.')
+        raise self.validation_exception_type(_(u'Unknown country.'))
 
     def parse_region_code(self, value, number):
         """ Extracts region code from ``value`` and sets it to
@@ -129,7 +135,7 @@ class PhoneNumberValidator(object):
 
         if not COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].has_key(
                 'regions'):
-            raise self.validation_exception_type((
+            raise self.validation_exception_type(_(
                     u'Region information for country {0} is not '
                     u'known.').format(number.country))
 
@@ -141,4 +147,4 @@ class PhoneNumberValidator(object):
                 number.region = region['region']
                 return value[len(region['code']):]
 
-        raise self.validation_exception_type(u'Unknown region.')
+        raise self.validation_exception_type(_(u'Unknown region.'))
