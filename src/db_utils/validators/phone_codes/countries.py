@@ -4,9 +4,13 @@
 
 """ In this file is provided a list of countries with their phone codes.
 
-
 FIXME: Countries should be in English and internationalized with
 ``gettext``.
+
+FIXME: Add missing countries from
+http://en.wikipedia.org/wiki/List_of_country_calling_codes
+
+TODO: Add region codes for Germany.
 
 """
 
