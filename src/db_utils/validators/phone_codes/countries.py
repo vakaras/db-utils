@@ -4,9 +4,13 @@
 
 """ In this file is provided a list of countries with their phone codes.
 
-
 FIXME: Countries should be in English and internationalized with
 ``gettext``.
+
+FIXME: Add missing countries from
+http://en.wikipedia.org/wiki/List_of_country_calling_codes
+
+TODO: Add region codes for Germany.
 
 """
 
@@ -565,6 +569,8 @@ COUNTRIES_PHONE_CODES = [
         'code': u'370',
         'regions': REGIONS_PHONE_CODES_LT,
         'regions_by_code': REGIONS_PHONE_CODES_LT_BY_CODE,
+        'number_length_min': 11,
+        'number_length_max': 11,
     },
     {
         'country': u'Liuksemburgas',
@@ -790,4 +796,8 @@ COUNTRIES_PHONE_CODES = [
         'country': u'Rytų Timoras',
         'code': u'670',
     },
+    {
+        'country': u'Vokietija',
+        'code': u'49',
+    }
     ]

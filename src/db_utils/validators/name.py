@@ -85,6 +85,7 @@ class NamesValidator(object):
         self.validation_exception_type = validation_exception_type
         self.name_validator = NameValidator(
                 alphabet, validation_exception_type, convert)
+        self.convert = convert
 
     @UnicodeArguments(skip=['self', 0])
     def __call__(self, value):
@@ -97,9 +98,16 @@ class NamesValidator(object):
                 u'One or two names are allowed.'))
 
         names = []
-        for value in values:
-            names.append(self.name_validator(value))
-        return u' '.join(names)
+        for word in values:
+            names.append(self.name_validator(word))
+
+        name = u' '.join(names)
+        if not self.convert:
+            if name != value:
+                raise self.validation_exception_type(
+                        u'Names can\'t have surounding whitespace.')
+
+        return name
 
 
 class SurnameValidator(NamesValidator):
