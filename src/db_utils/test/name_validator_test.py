@@ -8,11 +8,10 @@ import unittest
 
 
 from db_utils.validators.exceptions import ValidationError
-from db_utils.validators.name import ALPHABET_LT
-from db_utils.validators.name import NameValidator
-from db_utils.validators.name import NamesValidator
-from db_utils.validators.name import SurnameValidator
-from db_utils.validators.name import FullNameValidator
+from db_utils.validators.name import (
+        ALPHABET_LT, NameValidator, NamesValidator, SurnameValidator,
+        FullNameValidator,
+        )
 
 
 class CustomValidationError(Exception):
@@ -69,7 +68,16 @@ class NamesValidatorTest(unittest.TestCase):
         assert validator(u'  Foo Bar  ') == u'Foo Bar'
         assert validator(u' fOo  bAr') == u'Foo Bar'
 
-    def test_incorrect_names(self):
+    def test_incorrect_names_without_convert(self):
+
+        validator = NamesValidator(ALPHABET_LT, convert=False)
+
+        self.assertRaises(ValidationError, validator, u'  Foo   ')
+        self.assertRaises(ValidationError, validator, u' Foo  ')
+        self.assertRaises(ValidationError, validator, u'  Foo Bar  ')
+        self.assertRaises(ValidationError, validator, u' fOo  bAr')
+
+    def test_incorrect_names_with_convert(self):
 
         validator = NamesValidator(ALPHABET_LT)
 
@@ -103,7 +111,7 @@ class SurnameValidatorTest(unittest.TestCase):
         self.assertRaises(ValidationError, validator, u'foo-bar-foobarer')
 
 
-class NamesValidatorTest(unittest.TestCase):
+class FullNameValidatorTest(unittest.TestCase):
     """ Tests for ``FullNameValidator``.
     """
 
