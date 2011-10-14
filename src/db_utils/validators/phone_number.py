@@ -95,10 +95,22 @@ class PhoneNumberValidator(object):
         value = self.parse_region_code(value, number)
         number.number = value
 
-        if len(unicode(number)) != 12:
-            raise self.validation_exception_type(
-                    u'Phone number in international form should have 12 '
-                    u'digits.')
+        if COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].get(
+                'number_length_min', 0) + 1 > len(unicode(number)):
+            raise self.validation_exception_type((
+                    u'Phone number in international form should have '
+                    u'at least {0} digits.').format(
+                        COUNTRIES_PHONE_CODES_BY_CODE[
+                            number.country_code].get(
+                                'number_length_min', 0)))
+        if COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].get(
+                'number_length_max', 100) + 1 < len(unicode(number)):
+            raise self.validation_exception_type((
+                    u'Phone number in international form should have '
+                    u'no more than {0} digits.').format(
+                        COUNTRIES_PHONE_CODES_BY_CODE[
+                            number.country_code].get(
+                                'number_length_max', 0)))
 
         return number
 
@@ -129,9 +141,14 @@ class PhoneNumberValidator(object):
 
         if not COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].has_key(
                 'regions'):
-            raise self.validation_exception_type((
-                    u'Region information for country {0} is not '
-                    u'known.').format(number.country))
+            number.region_code = u''
+            number.region = None
+            return value
+
+        if not value:
+            raise self.validation_exception_type(
+                    u'No region info in phone number found. '
+                    u'Maybe number is too short?')
 
         for region in COUNTRIES_PHONE_CODES_BY_CODE[
                 number.country_code]['regions']:
@@ -141,4 +158,5 @@ class PhoneNumberValidator(object):
                 number.region = region['region']
                 return value[len(region['code']):]
 
-        raise self.validation_exception_type(u'Unknown region.')
+        raise self.validation_exception_type(
+                u'Unknown phone number region.')

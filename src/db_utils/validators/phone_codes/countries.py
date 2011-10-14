@@ -565,6 +565,8 @@ COUNTRIES_PHONE_CODES = [
         'code': u'370',
         'regions': REGIONS_PHONE_CODES_LT,
         'regions_by_code': REGIONS_PHONE_CODES_LT_BY_CODE,
+        'number_length_min': 11,
+        'number_length_max': 11,
     },
     {
         'country': u'Liuksemburgas',

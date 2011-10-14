@@ -70,6 +70,14 @@ class PhoneNumberValidatorTest(unittest.TestCase):
         assert number.region_code == u'6'
         assert unicode(number) == u'+37161234567'
 
+        number = validator(u'+37151234567')
+        assert number.number == u'51234567'
+        assert number.country == u'Latvija'
+        assert number.country_code == u'371'
+        assert number.region is None
+        assert number.region_code == u''
+        assert unicode(number) == u'+37151234567'
+
         # Non mobile phone numbers.
         for input_data in (
                 u'0037051234567',
@@ -86,11 +94,12 @@ class PhoneNumberValidatorTest(unittest.TestCase):
     def test_incorrect_numbers(self):
 
         validator = PhoneNumberValidator(u'370')
+        self.assertRaises(ValidationError, validator, u'+370')
         self.assertRaises(ValidationError, validator, u'1234567')
         self.assertRaises(ValidationError, validator, u'+37861234567')
-        self.assertRaises(ValidationError, validator, u'+37151234567')
         self.assertRaises(ValidationError, validator, u'+37081234567')
         self.assertRaises(ValidationError, validator, u'+370512345678')
+        self.assertRaises(ValidationError, validator, u'+3705123456')
 
         self.assertRaises(ValidationError, validator, None)
         self.assertRaises(ValidationError, validator, u'')
