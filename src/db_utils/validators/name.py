@@ -104,8 +104,8 @@ class NamesValidator(object):
         name = u' '.join(names)
         if not self.convert:
             if name != value:
-                raise self.validation_exception_type(
-                        u'Names can\'t have surounding whitespace.')
+                raise self.validation_exception_type(_(
+                        u'Names can\'t have surounding whitespace.'))
 
         return name
 
