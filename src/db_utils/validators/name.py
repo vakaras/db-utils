@@ -11,6 +11,11 @@ import re
 from db_utils.validators.exceptions import ValidationError
 from db_utils.decorators.unicode import UnicodeArguments
 
+try:
+    from django.utils.translation import ugettext as _
+except ImportError:
+    _ = lambda text: text
+
 
 ALPHABET_LT = (
     u'a', u'ą', u'b', u'c', u'č', u'd', u'e', u'ę', u'ė', u'f', u'g',
@@ -45,17 +50,17 @@ class NameValidator(object):
         """
 
         if not value:
-            raise self.validation_exception_type(
-                    u'Empty string cannot be a name.')
+            raise self.validation_exception_type(_(
+                    u'Empty string cannot be a name.'))
 
         for symbol in value.lower():
             if symbol not in self.alphabet:
-                raise self.validation_exception_type(
-                        u'Symbol "{0}" is not allowed in name.'.format(
+                raise self.validation_exception_type(_(
+                    u'Symbol "{0}" is not allowed in name.').format(
                             symbol))
 
         if not self.convert and not value.istitle():
-            raise self.validation_exception_type(u'Wrong name format.')
+            raise self.validation_exception_type(_(u'Wrong name format.'))
         else:
             return value.title()
 
@@ -88,8 +93,8 @@ class NamesValidator(object):
 
         values = value.strip().split()
         if not (1 <= len(values) <= 2):
-            raise self.validation_exception_type(
-                    u'One or two names are allowed.')
+            raise self.validation_exception_type(_(
+                u'One or two names are allowed.'))
 
         names = []
         for value in values:
@@ -116,8 +121,8 @@ class SurnameValidator(NamesValidator):
 
         values = value.strip().split()
         if not (1 <= len(values) <= 2):
-            raise self.validation_exception_type(
-                    u'Just one or two words in surname are allowed.')
+            raise self.validation_exception_type(_(
+                u'Just one or two words in surname are allowed.'))
 
         names = []
         for value in values:

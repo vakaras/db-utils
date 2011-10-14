@@ -14,7 +14,10 @@ from db_utils.validators.phone_codes import COUNTRIES_PHONE_CODES_BY_CODE
 from db_utils.validators.phone_codes import COUNTRIES_PHONE_CODES
 from db_utils.decorators.unicode import UnicodeArguments
 
-from django.utils.translation import ugettext as _
+try:
+    from django.utils.translation import ugettext as _
+except ImportError:
+    _ = lambda text: text
 
 
 def simple_validator(value):
