@@ -790,4 +790,8 @@ COUNTRIES_PHONE_CODES = [
         'country': u'Rytų Timoras',
         'code': u'670',
     },
+    {
+        'country': u'Vokietija',
+        'code': u'49',
+    }
     ]
