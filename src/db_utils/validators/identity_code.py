@@ -69,6 +69,8 @@ class IdentityCodeValidator(object):
             if counted_control_digit != 10:
                 case -= 1
                 break
+        if counted_control_digit == 10:
+            counted_control_digit = 0
         case += 1
 
         if control_digit != counted_control_digit:
