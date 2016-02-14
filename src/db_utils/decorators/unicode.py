@@ -9,20 +9,20 @@ def to_unicode(value, encoding='utf-8'):
     """ Converts value to Unicode.
     """
 
-    if isinstance(value, str):
+    if isinstance(value, bytes):
         return value.decode(encoding)
     else:
-        return unicode(value)
+        return str(value)
 
 
 def to_bytes(value, encoding='utf-8'):
     """ Converts value to byte string.
     """
 
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return value.encode(encoding)
     else:
-        return str(value)
+        return bytes(value)
 
 
 class UnicodeArguments(object):
