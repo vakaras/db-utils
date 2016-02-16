@@ -34,7 +34,7 @@ class PhoneNumber(object):
         self.region = None
         self.region_code = None
 
-    def __unicode__(self):
+    def __str__(self):
         return u'+{0.country_code}{0.region_code}{0.number}'.format(self)
 
 
@@ -96,7 +96,7 @@ class PhoneNumberValidator(object):
         number.number = value
 
         if COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].get(
-                'number_length_min', 0) + 1 > len(unicode(number)):
+                'number_length_min', 0) + 1 > len(str(number)):
             raise self.validation_exception_type((
                     u'Phone number in international form should have '
                     u'at least {0} digits.').format(
@@ -104,7 +104,7 @@ class PhoneNumberValidator(object):
                             number.country_code].get(
                                 'number_length_min', 0)))
         if COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].get(
-                'number_length_max', 100) + 1 < len(unicode(number)):
+                'number_length_max', 100) + 1 < len(str(number)):
             raise self.validation_exception_type((
                     u'Phone number in international form should have '
                     u'no more than {0} digits.').format(
