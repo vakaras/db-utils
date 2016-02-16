@@ -139,8 +139,8 @@ class PhoneNumberValidator(object):
             number.region = None
             return value[1:]
 
-        if not COUNTRIES_PHONE_CODES_BY_CODE[number.country_code].has_key(
-                'regions'):
+        if ('regions' not in
+           COUNTRIES_PHONE_CODES_BY_CODE[number.country_code]):
             number.region_code = u''
             number.region = None
             return value
